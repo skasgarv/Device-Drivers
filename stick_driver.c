@@ -46,10 +46,14 @@ static ssize_t pen_read(struct file *f, char __user *buf, size_t cnt, loff_t *of
     
 
 	/*copy_to_user has similar working of Memcpy 
-	Why can't you just call, say, memcpy? Two reasons. One, the kernel is capable of 	writing to any memory. User process's can't. copy_to_user needs to check dst to 	ensure it is accessible and writable by the current process. Two, depending on the 	architecture, you can't simply copy data from kernel to user-space. You might need to 	do some special setup first, invalidate certain caches, or use special operations.
+	Why can't you just call, say, memcpy? Two reasons. One, the kernel is capable of writing to any memory. 
+	User process's can't. copy_to_user needs to check dst to ensure it is accessible and writable by the current process. 
+	Two, depending on the 	architecture, you can't simply copy data from kernel to user-space. You might need to do 
+	some special setup first, invalidate certain caches, or use special operations.
+	
 	Source: https://www.quora.com/Linux-Kernel-How-does-copy_to_user-work
 	
-	Data from bulk_buf address is read and stored in buf. The amount of data read is 	defined by MIN(cnt, read_cnt)
+	Data from bulk_buf address is read and stored in buf. The amount of data read is defined by MIN(cnt, read_cnt)
 	*/
 	
 	if (copy_to_user(buf, bulk_buf, MIN(cnt, read_cnt)))
@@ -99,7 +103,8 @@ static int pen_probe(struct usb_interface *interface, const struct usb_device_id
 {
 
 	/*
-	Probe function will not always be called. Probe function is called only when the 	device is plugged for the first time or the default driver module is not loaded to the 	device.
+	Probe function will not always be called. Probe function is called only when the device is plugged 
+	for the first time or the default driver module is not loaded to the device.
 	*/
     	
 	int retval;
@@ -108,7 +113,9 @@ static int pen_probe(struct usb_interface *interface, const struct usb_device_id
     	class.name = "usb/pen%d";
    	
 	/*
-   	fops is a structure which has the basic functionalities for a read and write operation to 	a USB Device. fops has "read", "write", "open" and "release" options which helps us 	perform the required operation 
+   	fops is a structure which has the basic functionalities for a read and write operation to 	
+   	a USB Device. fops has "read", "write", "open" and "release" options which helps us 	
+   	perform the required operation 
     	*/
 	class.fops = &fops;
     
@@ -131,7 +138,8 @@ static int pen_probe(struct usb_interface *interface, const struct usb_device_id
 static void pen_disconnect(struct usb_interface *interface)
 {
 	/*
-	This function is called when the Pendrive is disconnected from the system and this 	requires a USB Interface and the USB object which is defined in the class.
+	This function is called when the Pendrive is disconnected from the system and this 	
+	requires a USB Interface and the USB object which is defined in the class.
 	*/
     
 	usb_deregister_dev(interface, &class);
@@ -143,7 +151,7 @@ static struct usb_device_id pen_table[] =
     
 	{ USB_DEVICE(0x058F, 0x6387) }, //Syntax USB_DEVICE(Major Number,Minor Number)
     	/*
-	Major and Minor number are obtained either by reverse engineering or using LSUSB 	command
+	Major and Minor number are obtained either by reverse engineering or using LSUSB command
 	*/	
     
 	{}, /* Terminating entry */
@@ -175,7 +183,7 @@ static int __init pen_init(void){
 	//Register the device which returns 0 on success.
 	ret = usb_register(&pen_driver);
 	/*
-	 here pen_driver is the name given for our pen drive file. we shall discuss this in the 	structure
+	 here pen_driver is the name given for our pen drive file. we shall discuss this in the structure
 	*/
 
 	printk(KERN_INFO "Registration complete.\n");
