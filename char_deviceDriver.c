@@ -1,3 +1,9 @@
+/*
+A character device basically reads or writes a character data to a device. This device driver is the most simplest 
+version of device drivers
+eg: Mouse, Keyboard, Barcode Reader
+*/
+
 #include<linux/init.h>
 #include<linux/module.h>
 #include<linux/fs.h>
@@ -68,6 +74,7 @@ int __init char_deviceDriver_init(void){
 	printk(KERN_ALERT "Initializing the Character Device Driver.\n");
 	//Register the device and obtain the major number 
 	majorNumber = register_chrdev(0,DEVICE_NAME,&fops);
+	
 	if(majorNumber<0){
 		printk(KERN_ALERT "Major Number cannot be registered.\n");
 		return majorNumber;
@@ -87,6 +94,7 @@ int __init char_deviceDriver_init(void){
 	// alternate to sudo mknod -m 666 /dev/devicename/ c major_no minor_no
 	ebbcharDevice = device_create(ebbcharClass,NULL,MKDEV(majorNumber,0),NULL,DEVICE_NAME);
 	//error checking
+	
 	if(IS_ERR(ebbcharDevice)){
 		printk(KERN_ALERT "Failed to create the device.\n");
 		return PTR_ERR(ebbcharDevice);
